@@ -8,6 +8,12 @@ public class GestureRecognition : MonoBehaviour
 {
     
 
+    [Header("Settings")]
+    public float timeToHoldSign = 1;
+    private float holdTimer = 0;
+    public GameObject playerHead;
+
+
     public SignAtributes[] signs;
 
     [Serializable]
@@ -21,12 +27,26 @@ public class GestureRecognition : MonoBehaviour
         public float middle;
         public float ring;
         public float pinky;
+
+        public float distance;
+
+        public String followedBy;
+        public String result;
     }
 
-    public String findClosestSign(SteamVR_Behaviour_Skeleton hand)
+    private SignAtributes lastSign;
+    private SignAtributes lastConfidentSign;
+    private String lastConfidentSignName;
+
+    private List<String> saidWords = new List<String>();
+
+    public String findClosestSignBasic(SteamVR_Behaviour_Skeleton hand, Vector3 handPosition)
     {
         float lowestDiff = 100;
         String closestSignName = "NONE";
+        SignAtributes closestSign = new SignAtributes();
+
+
         for (int i = 0; i < signs.Length; i++)
         {
             SignAtributes sign = signs[i];
@@ -36,29 +56,76 @@ public class GestureRecognition : MonoBehaviour
             float ringDiff = Mathf.Abs(sign.ring - hand.ringCurl);
             float pinkyDiff = Mathf.Abs(sign.pinky - hand.pinkyCurl);
 
-            print("thumbDiff: " + thumbDiff + " indexDiff " + indexDiff + " middleDiff " + middleDiff + " ringDiff " + ringDiff + " pinkyDiff " + pinkyDiff);
+            //print(handPosition);
 
-            float avgDiff = (thumbDiff + indexDiff + middleDiff + ringDiff + pinkyDiff) / 5;
-            if (avgDiff < 0) { avgDiff = 0; }
-            if (avgDiff < lowestDiff)
+            float dist = Mathf.Abs(sign.distance - Vector3.Distance(handPosition, playerHead.transform.position));
+
+            if (sign.distance == -1)
             {
-                lowestDiff = avgDiff;
-                closestSignName = sign.name;
+                dist = 0;
             }
-            print(sign.name + " " + avgDiff);
+
+            float avgDiffFingerDiff = ((thumbDiff + indexDiff + middleDiff + ringDiff + pinkyDiff) / 5) + dist;
+            
+
+
+            if (avgDiffFingerDiff < 0) { avgDiffFingerDiff = 0; }
+            if (avgDiffFingerDiff < lowestDiff)
+            {
+                lowestDiff = avgDiffFingerDiff;
+                closestSignName = sign.name;
+                closestSign = sign;
+            }
+            print(sign.name + " " + avgDiffFingerDiff + " " + dist);
         }
+        
+
+        if (lastSign.name != closestSignName || closestSignName == "EMPTY")
+        {
+            holdTimer = 0;
+        }
+        
+        if (holdTimer >= timeToHoldSign)
+        {
+            lastConfidentSign = closestSign;
+            lastConfidentSignName = closestSignName;
+        }
+
+        //Return the result if there is a followed by
+        if (lastConfidentSign.followedBy == closestSignName)
+        {
+            closestSignName = lastConfidentSign.result;
+            if (saidWords[0] != closestSignName)
+            {
+                saidWords[0] = closestSignName;
+            } 
+            holdTimer = 0;
+        }
+        
+
+        holdTimer += Time.deltaTime;
+        lastSign = closestSign;
+
         return closestSignName;
     }
 
-    // Start is called before the first frame update
-    void Start()
+    public String getConfidentSignName()
     {
-        
+        return lastConfidentSignName;
     }
 
-    // Update is called once per frame
-    void Update()
+    public float getHoldTimer()
     {
-        //print("Left: " + leftController.fingerCurls[1]);
+        return holdTimer;
+    }
+
+    public List<String> getSaidWords()
+    {
+        return saidWords;
+    }
+
+    private void Start()
+    {
+        saidWords.Add("START");
     }
 }

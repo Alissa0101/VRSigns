@@ -11,6 +11,9 @@ public class GameController : MonoBehaviour
 
     GestureRecognition gr;
 
+    public GameObject leftControllerObject;
+    public GameObject rightControllerObject;
+
     public SteamVR_Behaviour_Skeleton leftController;
     public SteamVR_Behaviour_Skeleton rightController;
 
@@ -26,9 +29,9 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        string closestLeftHandSign = gr.findClosestSign(leftController);
-        print("Left: " + closestLeftHandSign);
-        debugText.SetText("Left: " + closestLeftHandSign);
+        //string closestLeftHandSign = gr.findClosestSignBasic(leftController);
+        string closestRightHandSign = gr.findClosestSignBasic(rightController, rightControllerObject.transform.position);
+        debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
         //print("Right: " + RightController.fingerCurls);
     }
 }
