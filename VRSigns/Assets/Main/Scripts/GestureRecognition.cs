@@ -76,7 +76,7 @@ public class GestureRecognition : MonoBehaviour
                 closestSignName = sign.name;
                 closestSign = sign;
             }
-            print(sign.name + " " + avgDiffFingerDiff + " " + dist);
+            //print(sign.name + " " + avgDiffFingerDiff + " " + dist);
         }
         
 
