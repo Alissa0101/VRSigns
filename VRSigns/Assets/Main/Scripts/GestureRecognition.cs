@@ -34,9 +34,10 @@ public class GestureRecognition : MonoBehaviour
         public String result;
     }
 
-    private SignAtributes lastSign;
-    private SignAtributes lastConfidentSign;
-    private String lastConfidentSignName;
+    [HideInInspector]
+    public SignAtributes lastSign;
+    public SignAtributes lastConfidentSign;
+    public String lastConfidentSignName;
 
     private List<String> saidWords = new List<String>();
 

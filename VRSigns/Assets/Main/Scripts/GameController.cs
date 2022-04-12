@@ -19,6 +19,7 @@ public class GameController : MonoBehaviour
 
     GameObject lineRight;// = new GameObject();
     GameObject lineLeft;// = new GameObject();
+    
 
     [Header("Debug")]
     public TextMeshPro debugText;
@@ -38,9 +39,6 @@ public class GameController : MonoBehaviour
 
         lineRight.transform.position = new Vector3(9999, 9999 ,9999);
         lineLeft.transform.position = new Vector3(9999, 9999, 9999);
-
-
-
     }
 
     // Update is called once per frame
@@ -48,18 +46,30 @@ public class GameController : MonoBehaviour
     {
         //string closestLeftHandSign = gr.findClosestSignBasic(leftController);
         string closestRightHandSign = gr.findClosestSignBasic(rightController, rightControllerObject.transform.position);
-        //fb.run("right", "ThankYou_1");
-        debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
-        //print("Right: " + RightController.fingerCurls);
-        laserPointer(rightControllerObject, lineRight, rightController);
+        SignList.Signs selectedSign = signList.signs[signList.selectedSignIndex];
+        debugText.SetText(signList.selectedSignIndex + " " + selectedSign.name + "\n" + closestRightHandSign + " " + gr.getSaidWords()[0]);
         
+
+        if (gr.getSaidWords()[0] == selectedSign.name)
+        {
+            //signList.signs[signList.selectedSignIndex].timesComplete += 1;
+            //print(signList.signs[signList.selectedSignIndex].timesComplete);
+            //signList.selectedSignIndex += 1;
+            print("Next word");
+            signList.nextWord();
+        }
+
+        
+        
+        //fb.run("right", "ThankYou_1");
+        //debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
+        //print("Right: " + RightController.fingerCurls);
+        //laserPointer(rightControllerObject, lineRight, rightController);
     }
 
     void laserPointer(GameObject controller, GameObject line, SteamVR_Behaviour_Skeleton controllerSkeleton)
     {
-
         
-
         RaycastHit hit;
 
         Vector3 pos = controller.transform.position;
@@ -80,16 +90,13 @@ public class GameController : MonoBehaviour
 
         if (Physics.Raycast(pos, controller.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity))
         {
-            //Debug.DrawRay(pos, controller.transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
             if (hit.collider.GetComponent<Interactable>() != null)
             {
                 hit.collider.GetComponent<Interactable>().onIntersect(hit.collider.gameObject, isIndexTriggerPressed(controllerSkeleton));
             }
-            //Debug.Log("Did Hit: " + hit.collider.name);
         }
         else
         {
-            //Debug.DrawRay(pos, controller.transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             //Debug.Log("Did not Hit");
         }
     }
@@ -97,6 +104,5 @@ public class GameController : MonoBehaviour
     public bool isIndexTriggerPressed(SteamVR_Behaviour_Skeleton controllerSkeleton)
     {
         return (controllerSkeleton.indexCurl >= 0.9);
-        //return SteamVR_Actions.default_GrabPinch.GetStateDown(inputDevice);
     }
 }

@@ -28,13 +28,9 @@ public class ListObject : MonoBehaviour, Interactable
     public void onIntersect(GameObject obj, bool trigger)
     {
         print("Hit: " + obj.name + "Trigger: " + trigger);
-        //complete.GetComponent<Material>().color = Color.green;
-        //border.GetComponent<Material>().color = Color.green;
         if (trigger == true)
         {
             transform.parent.GetComponent<SignList>().startAnim(animationBoolName);
         }
-        
-        //throw new NotImplementedException();
     }
 }
