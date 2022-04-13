@@ -32,6 +32,7 @@ public class GestureRecognition : MonoBehaviour
 
         public String followedBy;
         public String result;
+        public String holdResult;
     }
 
     [HideInInspector]
@@ -90,6 +91,21 @@ public class GestureRecognition : MonoBehaviour
         {
             lastConfidentSign = closestSign;
             lastConfidentSignName = closestSignName;
+            if (lastConfidentSign.followedBy.Length == 0)
+            {
+                if (saidWords[0] != closestSignName)
+                {
+                    saidWords[0] = closestSignName;
+                }
+            }
+            else if (lastConfidentSign.holdResult.Length > 0)
+            {
+                if (saidWords[0] != lastConfidentSign.holdResult)
+                {
+                    saidWords[0] = lastConfidentSign.holdResult;
+                }
+            }
+            
         }
 
         //Return the result if there is a followed by
