@@ -15,7 +15,11 @@ public class GameController : MonoBehaviour
     public SteamVR_Behaviour_Skeleton leftController;
     public SteamVR_Behaviour_Skeleton rightController;
 
-    public SignList signList;
+    public GameObject playerHead;
+
+    public GameObject signListObject;
+
+    private SignList signList;
 
     GameObject lineRight;// = new GameObject();
     GameObject lineLeft;// = new GameObject();
@@ -30,6 +34,8 @@ public class GameController : MonoBehaviour
         gr = GetComponent<GestureRecognition>();
         fb = GetComponent<Feedback>();
         fb.init(leftControllerObject, rightControllerObject, gr);
+
+        signList = signListObject.GetComponent<SignList>();
 
         lineRight = new GameObject();
         lineLeft = new GameObject();
@@ -66,6 +72,7 @@ public class GameController : MonoBehaviour
         //print("Right: " + RightController.fingerCurls);
         //laserPointer(rightControllerObject, lineRight, rightController);
     }
+    
 
     void laserPointer(GameObject controller, GameObject line, SteamVR_Behaviour_Skeleton controllerSkeleton)
     {

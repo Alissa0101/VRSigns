@@ -10,8 +10,7 @@ public class SignList : MonoBehaviour
     public Animator handAnimator;
 
     public Signs[] signs;
-
-    public int amountToComplete = 3;
+    
 
     [HideInInspector]
     public int selectedSignIndex = -1;
@@ -31,7 +30,7 @@ public class SignList : MonoBehaviour
             {
                 hiddenTimesComplete = value;
 
-                if (value >= 3)
+                if (value >= 1)
                 {
                     this.complete = true;
                 }
