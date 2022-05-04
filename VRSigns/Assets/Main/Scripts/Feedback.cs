@@ -9,25 +9,31 @@ public class Feedback : MonoBehaviour
     
 
     private GestureRecognition gr;
+    
+    public SteamVR_Behaviour_Skeleton rightController;
 
-    private GameObject leftControllerObject;
-    private GameObject rightControllerObject;
-
-    private SteamVR_Behaviour_Skeleton leftController;
-    private SteamVR_Behaviour_Skeleton rightController;
-
-    public Material correctMeterial;
-    public Material incorrectMaterial;
+    public SkinnedMeshRenderer feedBackHand;
 
     public float maxError = 0.1f;
 
+    [Header("Red Materials")]
+    public Material red_Thumb;
+    public Material red_Index;
+    public Material red_Middle;
+    public Material red_Ring;
+    public Material red_Pinky;
+
+    [Header("Green Materials")]
+    public Material green_Thumb;
+    public Material green_Index;
+    public Material green_Middle;
+    public Material green_Ring;
+    public Material green_Pinky;
+
+    
+
     public void init(GameObject left, GameObject right, GestureRecognition gr)
     {
-        leftControllerObject = left;
-        rightControllerObject = right;
-
-        leftController = leftControllerObject.GetComponent<SteamVR_Behaviour_Skeleton>();
-        rightController = rightControllerObject.GetComponent<SteamVR_Behaviour_Skeleton>();
 
         this.gr = gr;
     }
@@ -36,20 +42,23 @@ public class Feedback : MonoBehaviour
 
     public void run(String leftOrRight, String targetSignName)///CHANGE NAME LATER
     {
-        GameObject controllerObject = leftControllerObject;
-        SteamVR_Behaviour_Skeleton hand = leftController;
-        GestureRecognition.SignAtributes targetSign = gr.signs[0];
+        SteamVR_Behaviour_Skeleton hand = rightController;
+        GestureRecognition.SignAtributes targetSign = gr.getSignByName(targetSignName);//gr.signs[0];
 
-        for (int i = 0; i < gr.signs.Length; i++)
-        {
-            if (gr.signs[i].name == targetSignName) { targetSign = gr.signs[i]; }
-        }
+        //if (targetSign.followedBy.Length > 0 && gr.lastConfidentSign.name == targetSignName)
+        //{
+        //    targetSign = gr.getSignByName(targetSign.followedBy);
+        //}
+
+        //for (int i = 0; i < gr.signs.Length; i++)
+        //{
+        //    if (gr.signs[i].name == targetSignName) { targetSign = gr.signs[i]; }
+        //}
 
         //print(targetSign.name);
 
         if (leftOrRight == "right")
         {
-            controllerObject = rightControllerObject;
             hand = rightController;
         }
 
@@ -60,8 +69,56 @@ public class Feedback : MonoBehaviour
         float ringDiff = Mathf.Abs(targetSign.ring - hand.ringCurl);
         float pinkyDiff = Mathf.Abs(targetSign.pinky - hand.pinkyCurl);
 
+        print(targetSignName + " " + targetSign.name);
 
+        Material[] mats = feedBackHand.materials;
 
+        if (thumbDiff > maxError)
+        {
+            mats[1] = red_Thumb;
+        }
+        else
+        {
+            mats[1] = green_Thumb;
+        }
+
+        if (indexDiff > maxError)
+        {
+            mats[2] = red_Index;
+        }
+        else
+        {
+            mats[2] = green_Index;
+        }
+
+        if (middleDiff > maxError)
+        {
+            mats[3] = red_Middle;
+        }
+        else
+        {
+            mats[3] = green_Middle;
+        }
+
+        if (ringDiff > maxError)
+        {
+            mats[4] = red_Ring;
+        }
+        else
+        {
+            mats[4] = green_Ring;
+        }
+
+        if (pinkyDiff > maxError)
+        {
+            mats[5] = red_Pinky;
+        }
+        else
+        {
+            mats[5] = green_Pinky;
+        }
+
+        feedBackHand.materials = mats;
 
     }
 

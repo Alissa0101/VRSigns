@@ -37,14 +37,14 @@ public class GameController : MonoBehaviour
 
         signList = signListObject.GetComponent<SignList>();
 
-        lineRight = new GameObject();
-        lineLeft = new GameObject();
+        //lineRight = new GameObject();
+        //lineLeft = new GameObject();
 
-        lineRight.AddComponent<LineRenderer>();
-        lineLeft.AddComponent<LineRenderer>();
+        //lineRight.AddComponent<LineRenderer>();
+        //lineLeft.AddComponent<LineRenderer>();
 
-        lineRight.transform.position = new Vector3(9999, 9999 ,9999);
-        lineLeft.transform.position = new Vector3(9999, 9999, 9999);
+        //lineRight.transform.position = new Vector3(9999, 9999 ,9999);
+        //lineLeft.transform.position = new Vector3(9999, 9999, 9999);
     }
 
     // Update is called once per frame
@@ -54,7 +54,8 @@ public class GameController : MonoBehaviour
         string closestRightHandSign = gr.findClosestSignBasic(rightController, rightControllerObject.transform.position);
         SignList.Signs selectedSign = signList.signs[signList.selectedSignIndex];
         debugText.SetText(signList.selectedSignIndex + " " + selectedSign.name + "\n" + closestRightHandSign + " " + gr.getSaidWords()[0]);
-        
+
+        fb.run("right", selectedSign.rawName);
 
         if (gr.getSaidWords()[0] == selectedSign.name)
         {
@@ -67,7 +68,7 @@ public class GameController : MonoBehaviour
 
         
         
-        //fb.run("right", "ThankYou_1");
+        
         //debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
         //print("Right: " + RightController.fingerCurls);
         //laserPointer(rightControllerObject, lineRight, rightController);

@@ -20,6 +20,7 @@ public class SignList : MonoBehaviour
     public struct Signs
     {
         public String name;
+        public String rawName;
         //public String animationBoolName;
         
         private int hiddenTimesComplete;

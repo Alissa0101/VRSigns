@@ -42,6 +42,19 @@ public class GestureRecognition : MonoBehaviour
 
     private List<String> saidWords = new List<String>();
 
+    public SignAtributes getSignByName(String name)
+    {
+        for (int i = 0; i < signs.Length; i++)
+        {
+            SignAtributes sign = signs[i];
+            if (sign.name == name)
+            {
+                return sign;
+            }
+        }
+        return signs[0];
+    }
+
     public String findClosestSignBasic(SteamVR_Behaviour_Skeleton hand, Vector3 handPosition)
     {
         float lowestDiff = 100;
