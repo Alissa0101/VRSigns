@@ -15,11 +15,18 @@ public class GameController : MonoBehaviour
     public SteamVR_Behaviour_Skeleton leftController;
     public SteamVR_Behaviour_Skeleton rightController;
 
+    public GameObject handAndSignListParent;
+
     public GameObject playerHead;
 
     public GameObject signListObject;
 
+    public GameObject room;
+    public Vector3 roomOffset;
+
     private SignList signList;
+
+    private bool movedRoom = false;
 
     GameObject lineRight;// = new GameObject();
     GameObject lineLeft;// = new GameObject();
@@ -36,6 +43,8 @@ public class GameController : MonoBehaviour
         fb.init(leftControllerObject, rightControllerObject, gr);
 
         signList = signListObject.GetComponent<SignList>();
+        print(playerHead.transform.position);
+        
 
         //lineRight = new GameObject();
         //lineLeft = new GameObject();
@@ -50,6 +59,12 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if(playerHead.transform.position != new Vector3(-5.1f, -0.3f, 3.0f) && movedRoom == false)
+        {
+            room.transform.position = playerHead.transform.position + roomOffset;
+            movedRoom = true;
+        }
+        
         //string closestLeftHandSign = gr.findClosestSignBasic(leftController);
         string closestRightHandSign = gr.findClosestSignBasic(rightController, rightControllerObject.transform.position);
         SignList.Signs selectedSign = signList.signs[signList.selectedSignIndex];
@@ -65,10 +80,12 @@ public class GameController : MonoBehaviour
             print("Next word");
             signList.nextWord();
         }
+        
 
-        
-        
-        
+        handAndSignListParent.transform.LookAt(playerHead.transform);
+
+        handAndSignListParent.transform.rotation = Quaternion.Euler(0, handAndSignListParent.transform.eulerAngles.y + 90, handAndSignListParent.transform.eulerAngles.z);
+
         //debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
         //print("Right: " + RightController.fingerCurls);
         //laserPointer(rightControllerObject, lineRight, rightController);

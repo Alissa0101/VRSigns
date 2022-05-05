@@ -69,7 +69,7 @@ public class Feedback : MonoBehaviour
         float ringDiff = Mathf.Abs(targetSign.ring - hand.ringCurl);
         float pinkyDiff = Mathf.Abs(targetSign.pinky - hand.pinkyCurl);
 
-        print(targetSignName + " " + targetSign.name);
+        //print(targetSignName + " " + targetSign.name);
 
         Material[] mats = feedBackHand.materials;
 
