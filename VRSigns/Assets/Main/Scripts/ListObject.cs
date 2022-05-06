@@ -27,10 +27,15 @@ public class ListObject : MonoBehaviour, Interactable
 
     public void onIntersect(GameObject obj, bool trigger)
     {
-        print("Hit: " + obj.name + "Trigger: " + trigger);
-        if (trigger == true)
-        {
-            transform.parent.GetComponent<SignList>().startAnim(animationBoolName);
-        }
+        //print("Hit: " + obj.name + "Trigger: " + trigger);
+        //if (trigger == true)
+        //{
+            //transform.parent.GetComponent<SignList>().startAnim(animationBoolName);
+        //}
+    }
+
+    public void onLeaveIntersect(GameObject obj, bool trigger)
+    {
+        //
     }
 }

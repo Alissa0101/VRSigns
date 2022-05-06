@@ -15,6 +15,10 @@ public class GameController : MonoBehaviour
     public SteamVR_Behaviour_Skeleton leftController;
     public SteamVR_Behaviour_Skeleton rightController;
 
+    public GameObject menuParent;
+
+    public GameObject mainMenu;
+
     public GameObject handAndSignListParent;
 
     public GameObject playerHead;
@@ -30,7 +34,11 @@ public class GameController : MonoBehaviour
 
     GameObject lineRight;// = new GameObject();
     GameObject lineLeft;// = new GameObject();
-    
+
+    RaycastHit lastRayHit;
+
+    bool learningStarted = false;
+
 
     [Header("Debug")]
     public TextMeshPro debugText;
@@ -46,14 +54,18 @@ public class GameController : MonoBehaviour
         print(playerHead.transform.position);
         
 
-        //lineRight = new GameObject();
+        lineRight = new GameObject();
         //lineLeft = new GameObject();
 
-        //lineRight.AddComponent<LineRenderer>();
+        lineRight.AddComponent<LineRenderer>();
         //lineLeft.AddComponent<LineRenderer>();
 
-        //lineRight.transform.position = new Vector3(9999, 9999 ,9999);
+        lineRight.transform.position = new Vector3(9999, 9999 ,9999);
         //lineLeft.transform.position = new Vector3(9999, 9999, 9999);
+
+        lineRight.GetComponent<LineRenderer>().material = new Material(Shader.Find("Specular"));
+
+        handAndSignListParent.transform.position = new Vector3(handAndSignListParent.transform.position.x, 9999, handAndSignListParent.transform.position.z);
     }
 
     // Update is called once per frame
@@ -72,7 +84,7 @@ public class GameController : MonoBehaviour
 
         fb.run("right", selectedSign.rawName);
 
-        if (gr.getSaidWords()[0] == selectedSign.name)
+        if (gr.getSaidWords()[0] == selectedSign.name && learningStarted == true)
         {
             //signList.signs[signList.selectedSignIndex].timesComplete += 1;
             //print(signList.signs[signList.selectedSignIndex].timesComplete);
@@ -80,15 +92,27 @@ public class GameController : MonoBehaviour
             print("Next word");
             signList.nextWord();
         }
-        
 
-        handAndSignListParent.transform.LookAt(playerHead.transform);
 
-        handAndSignListParent.transform.rotation = Quaternion.Euler(0, handAndSignListParent.transform.eulerAngles.y + 90, handAndSignListParent.transform.eulerAngles.z);
+        menuParent.transform.LookAt(playerHead.transform);
+
+        menuParent.transform.rotation = Quaternion.Euler(0, menuParent.transform.eulerAngles.y + 90, menuParent.transform.eulerAngles.z);
 
         //debugText.SetText("Said: " + gr.getSaidWords()[0]);// + "R: " + closestRightHandSign + "\nC: " + gr.getConfidentSignName() + "\n" + gr.getHoldTimer());
         //print("Right: " + RightController.fingerCurls);
-        //laserPointer(rightControllerObject, lineRight, rightController);
+        if (learningStarted == false)
+        {
+            laserPointer(rightControllerObject, lineRight, rightController);
+        }
+    }
+
+   public void startLearning()
+    {
+        //handAndSignListParent.transform.position = new Vector3(0, 0.04636137f, 0);
+        handAndSignListParent.transform.position = new Vector3(handAndSignListParent.transform.position.x, 0.7f, handAndSignListParent.transform.position.z);
+        mainMenu.transform.position = new Vector3(0, 9999, 0);
+        lineRight.SetActive(false);
+        learningStarted = true;
     }
     
 
@@ -107,6 +131,8 @@ public class GameController : MonoBehaviour
         drawLine.endWidth = 0.01f;
         drawLine.startColor = Color.black;
         drawLine.endColor = Color.white;
+        //drawLine.sharedMaterial.SetColor("_Color", Color.gray);
+        
 
         //drawLine.positionCount = 1;
         drawLine.SetPosition(0, pos);
@@ -123,7 +149,16 @@ public class GameController : MonoBehaviour
         else
         {
             //Debug.Log("Did not Hit");
+            if (lastRayHit.collider != null)
+            {
+                if (lastRayHit.collider.GetComponent<Interactable>() != null)
+                {
+                    lastRayHit.collider.GetComponent<Interactable>().onLeaveIntersect(lastRayHit.collider.gameObject, isIndexTriggerPressed(controllerSkeleton));
+                }
+            }
+            
         }
+        lastRayHit = hit;
     }
 
     public bool isIndexTriggerPressed(SteamVR_Behaviour_Skeleton controllerSkeleton)

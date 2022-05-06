@@ -6,5 +6,6 @@ public interface Interactable
 {
 
     void onIntersect(GameObject obj, bool trigger);
+    void onLeaveIntersect(GameObject obj, bool trigger);
 
 }
