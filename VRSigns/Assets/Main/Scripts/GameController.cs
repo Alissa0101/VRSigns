@@ -78,7 +78,7 @@ public class GameController : MonoBehaviour
         }
         
         //string closestLeftHandSign = gr.findClosestSignBasic(leftController);
-        string closestRightHandSign = gr.findClosestSignBasic(rightController, rightControllerObject.transform.position);
+        string closestRightHandSign = gr.findClosestSign(rightController, rightControllerObject.transform.position);
         SignList.Signs selectedSign = signList.signs[signList.selectedSignIndex];
         debugText.SetText(signList.selectedSignIndex + " " + selectedSign.name + "\n" + closestRightHandSign + " " + gr.getSaidWords()[0]);
 

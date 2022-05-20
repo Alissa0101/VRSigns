@@ -21,7 +21,6 @@ public class GestureRecognition : MonoBehaviour
     {
         public String name;
 
-
         public float thumb;
         public float index;
         public float middle;
@@ -55,7 +54,7 @@ public class GestureRecognition : MonoBehaviour
         return signs[0];
     }
 
-    public String findClosestSignBasic(SteamVR_Behaviour_Skeleton hand, Vector3 handPosition)
+    public String findClosestSign(SteamVR_Behaviour_Skeleton hand, Vector3 handPosition)
     {
         float lowestDiff = 100;
         String closestSignName = "NONE";
@@ -71,6 +70,8 @@ public class GestureRecognition : MonoBehaviour
             float ringDiff = Mathf.Abs(sign.ring - hand.ringCurl);
             float pinkyDiff = Mathf.Abs(sign.pinky - hand.pinkyCurl);
 
+            float handError = ((thumbDiff + indexDiff + middleDiff + ringDiff + pinkyDiff) / 5);
+
             //print(handPosition);
 
             float dist = Mathf.Abs(sign.distance - Vector3.Distance(handPosition, playerHead.transform.position));
@@ -80,7 +81,7 @@ public class GestureRecognition : MonoBehaviour
                 dist = 0;
             }
 
-            float avgDiffFingerDiff = ((thumbDiff + indexDiff + middleDiff + ringDiff + pinkyDiff) / 5) + dist;
+            float avgDiffFingerDiff = handError + dist;
             
 
 

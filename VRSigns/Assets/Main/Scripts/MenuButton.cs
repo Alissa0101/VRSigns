@@ -36,6 +36,6 @@ public class MenuButton : MonoBehaviour, Interactable
     // Update is called once per frame
     void Update()
     {
-        background.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
+        //background.GetComponent<Renderer>().material.SetColor("_Color", Color.red);
     }
 }
